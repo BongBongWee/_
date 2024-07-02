@@ -15,6 +15,6 @@ def send_message_to_discord_webhook(webhook_url, message):
 
 # Example usage:
 webhook_url = 'https://discord.com/api/webhooks/1257580001247760486/TEe4kjBCEmbuGcIn-5_yFxsDUxxnm_ib7NE0bIYkmaQzdgZ_jR7L2Hbr7JQMox37LuBI'
-message = "test!"
+message = "test"
 
 send_message_to_discord_webhook(webhook_url, message)
