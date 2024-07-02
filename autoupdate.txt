@@ -1,0 +1,20 @@
+import requests
+
+def send_message_to_discord_webhook(webhook_url, message):
+    try:
+        payload = {'content': message}
+        headers = {'Content-Type': 'application/json'}
+        response = requests.post(webhook_url, json=payload, headers=headers)
+        
+        if response.status_code == 204:
+            print("Message sent successfully to Discord webhook.")
+        else:
+            print(f"Failed to send message. Status code: {response.status_code}")
+    except Exception as e:
+        print(f"An error occurred: {str(e)}")
+
+# Example usage:
+webhook_url = 'https://discord.com/api/webhooks/1257580001247760486/TEe4kjBCEmbuGcIn-5_yFxsDUxxnm_ib7NE0bIYkmaQzdgZ_jR7L2Hbr7JQMox37LuBI'
+message = "Hi!"
+
+send_message_to_discord_webhook(webhook_url, message)
